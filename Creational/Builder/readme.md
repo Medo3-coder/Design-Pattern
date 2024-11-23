@@ -16,6 +16,9 @@ Imagine you are ordering a custom pizza:
 
 ---
 
+  <img src="./builder-Design-pattern.jpg" alt="Example Image" width="300">
+  
+
 Below is the **PHP code** implementation of the **Builder Design Pattern** based on the example provided in the diagram for building **Nokia** and **Blackberry** phones:
 
 ---
