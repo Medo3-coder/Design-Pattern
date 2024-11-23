@@ -16,81 +16,184 @@ Imagine you are ordering a custom pizza:
 
 ---
 
-### **Code Example: Pizza Builder**
+Below is the **PHP code** implementation of the **Builder Design Pattern** based on the example provided in the diagram for building **Nokia** and **Blackberry** phones:
 
-## PHP Code Example
+---
 
+### **PHP Code**
+
+```php
 <?php
 
-// Pizza class with options
-class Pizza {
-    private string $size;
-    private string $crust;
-    private string $sauce;
-    private array $toppings;
+// 1. Product Class
+class Smartphone {
+    public $brand;
+    public $operatingSystem;
+    public $screenSize;
+    public $battery;
 
-    public function __construct(string $size, string $crust, string $sauce, array $toppings = []) {
-        $this->size = $size;
-        $this->crust = $crust;
-        $this->sauce = $sauce;
-        $this->toppings = $toppings;
-    }
-
-    public function describe(): string {
-        $toppingsList = !empty($this->toppings) ? implode(", ", $this->toppings) : "no toppings";
-        return "Pizza: {$this->size} size, {$this->crust} crust, {$this->sauce} sauce, with toppings: {$toppingsList}.";
+    public function showSpecifications() {
+        echo "Brand: {$this->brand}\n";
+        echo "Operating System: {$this->operatingSystem}\n";
+        echo "Screen Size: {$this->screenSize}\n";
+        echo "Battery: {$this->battery}mAh\n";
+        echo "----------------------\n";
     }
 }
 
-// PizzaBuilder for step-by-step construction
-class PizzaBuilder {
-    private string $size = "medium"; // Default value
-    private string $crust = "thin";  // Default value
-    private string $sauce = "tomato"; // Default value
-    private array $toppings = [];
+// 2. Builder Interface
+interface SmartphoneBuilder {
+    public function setBrand();
+    public function setOperatingSystem();
+    public function setScreenSize();
+    public function setBattery();
+    public function getSmartphone(): Smartphone;
+}
 
-    public function setSize(string $size): self {
-        $this->size = $size;
-        return $this; // Enable method chaining
+// 3. Concrete Builder for Nokia
+class NokiaBuilder implements SmartphoneBuilder {
+    private $smartphone;
+
+    public function __construct() {
+        $this->smartphone = new Smartphone();
     }
 
-    public function setCrust(string $crust): self {
-        $this->crust = $crust;
-        return $this;
+    public function setBrand() {
+        $this->smartphone->brand = "Nokia";
     }
 
-    public function setSauce(string $sauce): self {
-        $this->sauce = $sauce;
-        return $this;
+    public function setOperatingSystem() {
+        $this->smartphone->operatingSystem = "Symbian";
     }
 
-    public function addTopping(string $topping): self {
-        $this->toppings[] = $topping;
-        return $this;
+    public function setScreenSize() {
+        $this->smartphone->screenSize = "4.5 inches";
     }
 
-    public function build(): Pizza {
-        return new Pizza($this->size, $this->crust, $this->sauce, $this->toppings);
+    public function setBattery() {
+        $this->smartphone->battery = 2000;
+    }
+
+    public function getSmartphone(): Smartphone {
+        return $this->smartphone;
     }
 }
 
-// Example usage
-$pizzaBuilder = new PizzaBuilder();
-$myPizza = $pizzaBuilder
-    ->setSize("large")
-    ->setCrust("stuffed")
-    ->setSauce("barbecue")
-    ->addTopping("cheese")
-    ->addTopping("pepperoni")
-    ->build();
+// 4. Concrete Builder for Blackberry
+class BlackberryBuilder implements SmartphoneBuilder {
+    private $smartphone;
 
-echo $myPizza->describe();
+    public function __construct() {
+        $this->smartphone = new Smartphone();
+    }
 
+    public function setBrand() {
+        $this->smartphone->brand = "Blackberry";
+    }
+
+    public function setOperatingSystem() {
+        $this->smartphone->operatingSystem = "Blackberry OS";
+    }
+
+    public function setScreenSize() {
+        $this->smartphone->screenSize = "3.5 inches";
+    }
+
+    public function setBattery() {
+        $this->smartphone->battery = 1800;
+    }
+
+    public function getSmartphone(): Smartphone {
+        return $this->smartphone;
+    }
+}
+
+// 5. Director Class
+class Director {
+    private $builder;
+
+    public function setBuilder(SmartphoneBuilder $builder) {
+        $this->builder = $builder;
+    }
+
+    public function buildSmartphone(): Smartphone {
+        $this->builder->setBrand();
+        $this->builder->setOperatingSystem();
+        $this->builder->setScreenSize();
+        $this->builder->setBattery();
+        return $this->builder->getSmartphone();
+    }
+}
+
+// 6. Client Code
+function clientCode() {
+    $director = new Director();
+
+    // Building a Nokia phone
+    $nokiaBuilder = new NokiaBuilder();
+    $director->setBuilder($nokiaBuilder);
+    $nokiaPhone = $director->buildSmartphone();
+    echo "Nokia Smartphone Specifications:\n";
+    $nokiaPhone->showSpecifications();
+
+    // Building a Blackberry phone
+    $blackberryBuilder = new BlackberryBuilder();
+    $director->setBuilder($blackberryBuilder);
+    $blackberryPhone = $director->buildSmartphone();
+    echo "Blackberry Smartphone Specifications:\n";
+    $blackberryPhone->showSpecifications();
+}
+
+// Execute client code
+clientCode();
+
+```
+
+---
+
+### **Explanation**
+
+1. **Product Class (`Smartphone`)**:
+   - Represents the complex object being built.
+   - Includes properties like `brand`, `operatingSystem`, `screenSize`, and `battery`.
+   - Contains a method `showSpecifications()` to display the built product details.
+
+2. **Builder Interface (`SmartphoneBuilder`)**:
+   - Declares the steps required to build the product (e.g., `setBrand`, `setOperatingSystem`, etc.).
+
+3. **Concrete Builders**:
+   - **`NokiaBuilder`** and **`BlackberryBuilder`** implement the `SmartphoneBuilder` interface.
+   - Each defines the specific steps to build a Nokia or Blackberry smartphone.
+
+4. **Director Class**:
+   - The **Director** (`Director`) encapsulates the construction process.
+   - It uses a builder to construct a product step-by-step in a consistent manner.
+
+5. **Client Code**:
+   - Creates the Director and sets the required builder (Nokia or Blackberry).
+   - Calls the `buildSmartphone()` method of the Director to get the fully built product.
+   - Displays the specifications of the created smartphone.
+
+---
 
 ### **Output**
+
 ```
-Pizza: large size, stuffed crust, barbecue sauce, with toppings: cheese, pepperoni.
+Nokia Smartphone Specifications:
+Brand: Nokia
+Operating System: Symbian
+Screen Size: 4.5 inches
+Battery: 2000mAh
+----------------------
+Blackberry Smartphone Specifications:
+Brand: Blackberry
+Operating System: Blackberry OS
+Screen Size: 3.5 inches
+Battery: 1800mAh
+----------------------
 ```
+
+This code demonstrates how the **Builder Design Pattern** separates the construction of complex objects from their representation, ensuring flexibility and maintainability.
 
 ---
 
