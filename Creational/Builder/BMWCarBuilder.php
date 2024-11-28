@@ -1,5 +1,7 @@
 <?php
 
+namespace Creational\Builder;
+
 use Creational\Builder\CarBuilderInterface;
 use Creational\Builder\Models\BMWCar;
 use Creational\Builder\Models\Car;
