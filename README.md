@@ -43,3 +43,8 @@ Design patterns are generally categorized into three main groups:
 In essence, **design principles** guide **how** to write good code, while **design patterns** provide proven solutions to specific problems. 
 
 By combining both, developers can write scalable, maintainable, and efficient code.
+
+
+
+
+<!-- i need to explain FactoryMethod Design Pattern and  what porblem it sovle with real world exmaple problem and exmaple that -->
